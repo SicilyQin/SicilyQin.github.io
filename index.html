@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table Vertical Centering</title>
+	<style>
+		<svg fill="none" viewBox="0 0 180 28" width="180" height="28" xmlns="http://www.w3.org/2000/svg">
+	<foreignObject width="100%" height="100%">
+		<div xmlns="http://www.w3.org/1999/xhtml" style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emojit;">
+<style>
+	@keyframes home_sidebar_title_masked_animation__WanzD {
+            0% {
+                background-position: 350% 0
+            }
+            to {
+                background-position: -350% 0
+            }
+        }
+
+        .transparent-black-cell {
+    background-color: rgba(0, 0, 0, 0.5); /* 黑色背景，50%透明度 */
+  }
+        .home_title {
+	    margin: 0; /* Remove margin */
+            font-size: 20px;
+            font-weight: 700;
+            animation: home_slide-in__h1Bn_ .4s ease;
+            display: inline-block;
+            color: transparent;
+             background-image: linear-gradient(-220deg,#1649ee,#cd97e6 48%,#ee6552 60%,#7419c7);
+            background-image: linear-gradient(-220deg,#fc5c7d,#6a82fb,#05dfd7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-size: 200% 120%;
+            animation: home_sidebar_title_masked_animation__WanzD 10s linear infinite
+        }
+
+        h2 {
+            display: block;
+            font-size: 20px;
+            margin: 0; /* Set margin to 0 */
+            font-weight: bold;
+        }
+        
+        code {
+            font-family: monospace;
+            font-size: 20px;
+		}
+	.fullscreenvideo {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    -webkit-transition: 1s opacity;
+    transition: 1s opacity;
+}
+ 
+.videocontainer{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -100;	
+}
+ 
+.element {
+  border-radius: 20px;
+  border: 1px solid transparent;
+  border-image: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b) 2 2;
+  overflow: hidden;
+}
+
+.circular-image {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+  }
+  .circular-image img {
+    width: 200px;
+    height: auto;
+    border-radius: 50%;
+  }
+  .circular-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: inherit;
+    -webkit-mask-image: radial-gradient(circle, white 100%, transparent 0%);
+    mask-image: radial-gradient(circle, white 100%, transparent 0%);
+  }
+
+.transparent-box {
+    border-radius: 15px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 0px; /* 内边距 */
+    width: 100px; /* 宽度 */
+    height: 30px; /* 高度 */
+  }
+
+  .transparent-box1 {
+    border-radius: 10px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 1px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    height: 300px; /* 高度 */
+  }
+
+  .transparent-box2{
+    border-radius: 15px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 0px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    height: 60%; /* 高度 */
+  }
+
+  .white {
+  color: white;
+}
+  .transparent-box3{
+    border-radius: 15px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 0px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    height: 30px; /* 高度 */
+  }
+
+  .center-div {
+  width: 50%; /* 或者具体的宽度值 */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videocontainer:before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    background: rgba(25,29,34,.65);
+}
+	.center-image {
+  text-align: center;
+}
+  .table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  a.no-underline {
+  text-decoration: none;
+}
+
+a.custom-color {
+  color: #000000; /* 黑色或其他你想要的颜色 */
+}
+
+  table {
+    width: 80%;
+	  height:50%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+<div class="videocontainer">
+	<video class="fullscreenvideo" poster="__ROOT__/Themes/tdt/Asset/images/loginbg.jpg" id="bgvid" playsinline="" autoplay="" muted="" loop="">
+		<source src="D:\cyy\code\html\10月17日.mp4">
+	</video>
+</div>
+
+
+<div class="table-container">
+  <table border="0" class="element transparent-black-cell">
+    <tr>
+      <th width="25%" class="center-image circular-image">
+                <img src="D:\cyy\code\html\微信图片_20230508085643.jpg" alt="头像" width="150">
+     </th>
+     
+ <th width="50%" class="center-image"> 
+    <div>
+    <div class="transparent-box2 center-image">
+     <div class="home_title" data-tauri-drag-region="true"> <h1>Hey, I'm SicilyQin</h1>
+    </div>
+
+	  <div class="intro white">
+        <p id="daily-sentence">每日一言</p>
+     </div>
+	  
+                    <div id="time-greeting">
+                        <h1 class="white"><div id="current-time"></h1></div>
+                       <h2><a class="white"><div id="greeting"></div></a></h2>
+                       <br/>
+                    </div>
+                </div>
+            </div>
+
+                <div class="music-player">
+                    <p></p>
+                    <audio id="audio-player" src="D:\cyy\code\html\One Last Kiss - 宇多田ヒカル.mp3"></audio>
+                    <button id="play-pause" class="play-pause-btn transparent-box" style="color: white;">播放</button>
+                    
+                    <div class="volume-control">
+                        <button id="volume-btn" class="volume-btn">🔊</button>
+                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" class="volume-slider">
+                    </div>
+                </div>                
+                <br/> 
+                <div class="transparent-box3 center-div" text-align:center>
+                   <h2><a class="white"> <a href="https://space.bilibili.com/430824400?spm_id_from=333.1007.0.0" target="_blank" class="no-underline custom-color" style="color: white;">Bilibili</a></a>&nbsp;&nbsp;&nbsp;&nbsp;  
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+                   <a href="https://github.com/xiaoCRQ/Hackschooling" target="_blank" class="no-underline custom-color" style="color: white;">Github</a></h2>
+                </div>
+            </div>
+	</th>
+		<th width="25%" class="center-image white"><div class="new-right-sectiontransparent-black-cell transparent-box1">
+                <div id="today-weather" class="weather-container">
+                    <h3 class="white">今日天气</h3>
+                    <a class="white"> <div id="weather-info"></a>
+                        <p class="white">加载中...</p>
+                    </div>
+                </div>
+            </div></th>
+    </tr>
+   
+  </table>
+</div>
+
+<script src="script.js"></script>
+    <script>
+        function updateTimeAndGreeting() {
+            const timeElement = document.getElementById('current-time');
+            const greetingElement = document.getElementById('greeting');
+
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+
+            let greeting = '';
+            if (hours >= 6 && hours < 12) {
+                greeting = "*这是新的一天，你充满了希望!";
+            } else if (hours >= 12 && hours < 18) {
+                greeting = "*过了一个上午了，你充满了信心!";
+            } else if (hours >= 18 && hours < 24) {
+                greeting = "*现在是晚上了，你充满了快乐!";
+            } else {
+                greeting = "*现在是深夜了，我的朋友，恭喜你度过了一天!";
+            }
+
+            greetingElement.textContent = greeting;
+        }
+
+        const beautifulSentences = [
+            "每个人，都是一颗明亮的星星，点缀这漫长的夜，浩瀚星空。",
+            "逝去之人永远在，只是化为天上的星星而已。",
+            "It matters not what someone is born,but what they grow to be. ——Dumbledore",
+            "It is our choices,that show what we really are,far more than our abilities. ——Dumbledore",
+            "-After all this Time? -Always.",
+            "勇敢并不是一个人手中拿着枪，而是在你动手之前你已经知道自己会输，但依然会动手，而且无论如何会坚持到底。",
+            "Happiness can be found, even in the darkest of times, if one only remembers to turn on the light. ——Dumbledore",
+            "It takes a great deal of bravery to stand up to our enemies, but just as much to stand up to our friends. ——Dumbledore",
+            "To the well-organized mind, death is but the next great adventure. ——Dumbledore",
+            "Things we lose have a way of coming back to us in the end, if not always in the way we expect. ——Luna Lovegood",
+            "You sort of start thinking anything’s possible if you’ve got enough nerve. ——Ginny Weasley",
+            "We must all face the choice between what is right and what is easy. ——Dumbledore",
+            "I must not fear. Fear is the mind-killer. Fear is the little-death that brings total obliteration. ——Frank Herbert, Dune《沙丘》",
+            "Thus we never see the true state of our condition till it is illustrated to us by its contraries, nor know how to value what we enjoy, but by the want of it. ——Daniel Defoe, Robinson Crusoe《鲁滨逊漂流记》"
+        ];
+
+        window.onload = function() {
+            const randomSentence = beautifulSentences[Math.floor(Math.random() * beautifulSentences.length)];
+            const dailySentenceElement = document.getElementById('daily-sentence');
+            dailySentenceElement.textContent = randomSentence;
+
+            updateTimeAndGreeting();
+            setInterval(updateTimeAndGreeting, 1000);
+
+            const audioPlayer = document.getElementById('audio-player');
+            const playPauseBtn = document.getElementById('play-pause');
+            const volumeSlider = document.getElementById('volume-slider');
+
+            playPauseBtn.addEventListener('click', function() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    playPauseBtn.textContent = '暂停';
+                } else {
+                    audioPlayer.pause();
+                    playPauseBtn.textContent = '播放';
+                }
+            });
+
+            volumeSlider.addEventListener('input', function() {
+                audioPlayer.volume = volumeSlider.value;
+            });
+
+            async function fetchUserInfo() {
+                try {
+                    const userInfoResponse = await fetch('https://api.vvhan.com/api/visitor.info');
+                    const userInfo = await userInfoResponse.json();
+                    
+                    if (userInfo.success) {
+                        fetchWeather(userInfo.ip);
+                    } else {
+                        document.getElementById('weather-info').innerHTML = '<p>获取用户信息失败</p>';
+                    }
+                } catch (error) {
+                    console.error('获取用户信息时出错:', error);
+                    document.getElementById('weather-info').innerHTML = '<p>获取用户信息失败</p>';
+                }
+            }
+
+            async function fetchWeather(ip) {
+                try {
+                    const weatherResponse = await fetch(`https://api.vvhan.com/api/weather?ip=${ip}`);
+                    const weatherData = await weatherResponse.json();
+
+                    if (weatherData.success) {
+                        displayWeather(weatherData);
+                    } else {
+                        document.getElementById('weather-info').innerHTML = '<p>获取天气信息失败</p>';
+                    }
+                } catch (error) {
+                    console.error('获取天气信息时出错:', error);
+                    document.getElementById('weather-info').innerHTML = '<p>获取天气信息失败</p>';
+                }
+            }
+
+            function displayWeather(weatherData) {
+                const weatherInfo = document.getElementById('weather-info');
+                const data = weatherData.data;
+                const air = weatherData.air;
+
+                weatherInfo.innerHTML = `
+                    <p><strong>天气：</strong> ${data.type}</p>
+                    <p><strong>温度：</strong> ${data.low} ~ ${data.high}</p>
+                    <p><strong>风向：</strong> ${data.fengxiang} (${data.fengli})</p>
+                    <p class="weather-detail"><strong>夜间天气：</strong> ${data.night.type}, ${data.night.fengxiang} (${data.night.fengli})</p>
+                `;
+            }
+            fetchUserInfo();
+        };
+    </script>
+</body>
+</html>
