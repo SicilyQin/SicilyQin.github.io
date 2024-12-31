@@ -1,0 +1,413 @@
+/* Inspired by this pen by Pieter Biesemans https://codepen.io/pieter-biesemans/pen/BQBWXX and My Mother Before Me project http://mymotherbeforeme.com/ */
+
+body {
+  font-family: Hepta Slab, sans-serif;
+  font-weight: 500;
+  background: #ffffff;
+  color: #ffffff;
+}
+* {
+  box-sizing: border-box;
+}
+
+/* hide scrollbar */
+::-webkit-scrollbar {
+  width: 1px;
+  height: 1px;
+}
+
+::-webkit-scrollbar-button {
+  width: 1px;
+  height: 1px;
+}
+.external {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.horizontal-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vh;
+  transform: rotate(-90deg) translate3d(0,-100vh,0);
+  transform-origin: right top;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  height: 100vw;
+  perspective: 1px;
+	transform-style: preserve-3d;
+  padding-bottom: 10rem;
+}
+.img-wrapper {
+  transform: rotate(90deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  transform-origin: 50% 50%;
+  transform: rotate(90deg) translateZ(.1px) scale(0.9) translateX(0px) translateY(-3vh);
+  transition: 1s;
+}
+
+.img-wrapper:hover {
+ min-height: 65vh;
+}
+
+.slower {
+  transform: rotate(90deg) translateZ(-.2px) scale(1.1) translateX(0%) translateY(-10vh);
+}
+.slower1 {
+  transform: rotate(90deg) translateZ(-.25px) scale(1.05) translateX(0%) translateY(8vh);
+}
+.slower2 {
+  transform: rotate(90deg) translateZ(-.3px) scale(1.3) translateX(0%) translateY(2vh);
+}
+.slower-down {
+  transform: rotate(90deg) translateZ(-.2px) scale(1.1) translateX(0%) translateY(16vh) ;
+}
+.faster {
+  transform: rotate(90deg) translateZ(.15px) scale(0.8) translateX(0%) translateY(14vh) ;
+}
+.faster1 {
+  transform: rotate(90deg) translateZ(.05px) scale(0.8) translateX(0%) translateY(10vh) ;
+}
+.fastest {
+  transform: rotate(90deg) translateZ(.22px) scale(0.7) translateX(-10vh) translateY(-15vh) ;
+}
+.vertical {
+   transform: rotate(90deg) translateZ(-.15px) scale(1.15) translateX(0%) translateY(0%) ;
+}
+.last {
+  transform: rotate(90deg) translateZ(-.2px) scale(1.1) translateX(25vh) translateY(-8vh) ;
+}
+.scroll-info, header {
+  position: absolute;
+  left: 1rem;
+}
+
+
+header {
+  bottom: 1rem;
+}
+.scroll-info {
+  top: 1rem;
+}
+a {
+  color: inherit;
+  font-weight: 500;
+  
+}
+h1 {
+  font-weight: 300;
+  font-size: 1rem;
+}
+
+.img-wrapper a {
+  overflow: hidden;
+  display: block;
+  padding: 1vh ;
+  background: #ffffff;
+  box-shadow: 0 10px 50px #5f2f1182;
+}
+img {
+  max-width: 45vh;
+  max-height: 50vh;
+  transition: .5s;
+  vertical-align: top;
+  filter: none;
+}
+a:hover img {
+  filter: none;
+}
+p {
+  margin: 0;
+}
+.scroll-info {
+  display: flex;
+  align-items: center;
+}
+.icon svg {
+    width: 50px;
+    fill: currentcolor;
+}
+h3 {
+  svg {
+    width: 20em;
+  }
+}
+@keyframes home_sidebar_title_masked_animation__WanzD {
+            0% {
+                background-position: 350% 0
+            }
+            to {
+                background-position: -350% 0
+            }
+        }
+
+        .transparent-black-cell {
+    background-color: rgba(0, 0, 0, 0.5); /* 黑色背景，50%透明度 */
+  }
+        .home_title {
+	    margin: 0; /* Remove margin */
+            font-size: 20px;
+            font-weight: 700;
+            animation: home_slide-in__h1Bn_ .4s ease;
+            display: inline-block;
+            color: transparent;
+             background-image: linear-gradient(-220deg,#1649ee,#cd97e6 48%,#ee6552 60%,#7419c7);
+            background-image: linear-gradient(-220deg,#fc5c7d,#6a82fb,#05dfd7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-size: 200% 120%;
+            animation: home_sidebar_title_masked_animation__WanzD 10s linear infinite
+        }
+
+        h2 {
+            display: block;
+            font-size: 20px;
+            margin: 0; /* Set margin to 0 */
+            font-weight: bold;
+        }
+        
+        code {
+            font-family: monospace;
+            font-size: 20px;
+		}
+	.fullscreenvideo {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    -webkit-transition: 1s opacity;
+    transition: 1s opacity;
+}
+ 
+.videocontainer{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -100;	
+}
+ 
+.element {
+  border-radius: 20px;
+  border: 1px solid transparent;
+  border-image: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b) 2 2;
+  overflow: hidden;
+}
+
+.circular-image {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+  }
+  .circular-image img {
+    width: 200px;
+    height: auto;
+    border-radius: 50%;
+  }
+  .circular-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: inherit;
+    -webkit-mask-image: radial-gradient(circle, white 100%, transparent 0%);
+    mask-image: radial-gradient(circle, white 100%, transparent 0%);
+  }
+
+.transparent-box {
+    border-radius: 15px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 0px; /* 内边距 */
+    width: 100px; /* 宽度 */
+    height: 30px; /* 高度 */
+  }
+
+  .transparent-box1 {
+    border-radius: 10px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 1px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    height: 300px; /* 高度 */
+  }
+
+  .transparent-box2{
+    border-radius: 15px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 0px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    height: 60%; /* 高度 */
+  }
+
+  .white {
+  color: white;
+}
+  .transparent-box3{
+    border-radius: 15px; /* 设置圆角的大小 */
+    background-color: rgba(255, 255, 255, 0.3); /* 设置白色背景，0.5是50%的透明度 */
+    padding: 0px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    height: 30px; /* 高度 */
+  }
+
+  .center-div {
+  width: 50%; /* 或者具体的宽度值 */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videocontainer:before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    background: rgba(25,29,34,.65);
+}
+	.center-image {
+  text-align: center;
+}
+  .table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  a.no-underline {
+  text-decoration: none;
+}
+
+a.custom-color {
+  color: #000000; /* 黑色或其他你想要的颜色 */
+}
+
+  table {
+    width: 80%;
+	  height:50%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .background-div{
+ background-image:url('D:/cyy/code/html/微信图片_20230508085643.jpg');
+ background-size: cover;
+ background-repeat: no-repeat;
+ background-position: center;
+  width: 80%;
+  height: 600px;
+  background-color: rgba(255, 255, 255, 0.6);
+ 
+}
+
+.juzhong{
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 表单容器样式 */
+.form-container {
+  max-width: 500px; /* 表单的最大宽度 */
+  margin: 50px auto; /* 上下外边距50px，左右自动（居中） */
+  padding: 20px; /* 内边距 */
+  background-color: #ffffff; /* 背景颜色 */
+  border-radius: 8px; /* 边框圆角 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  font-family: 'Arial', sans-serif; /* 字体 */
+}
+
+/* 表单标题样式 */
+.form-title {
+  text-align: center; /* 文本居中 */
+  margin-bottom: 20px; /* 下外边距 */
+  color: #333; /* 文本颜色 */
+  font-size: 24px; /* 字体大小 */
+}
+
+/* 表单标签样式 */
+.form-label {
+  display: block; /* 块级显示 */
+  margin-bottom: 5px; /* 下外边距 */
+  color: #666; /* 文本颜色 */
+  font-size: 16px; /* 字体大小 */
+}
+
+/* 输入框和文本区域样式 */
+.form-input,
+.form-textarea {
+  width: 100%; /* 宽度100% */
+  padding: 10px; /* 内边距 */
+  margin-bottom: 20px; /* 下外边距 */
+  border: 1px solid #ddd; /* 边框 */
+  border-radius: 4px; /* 边框圆角 */
+  box-sizing: border-box; /* 边框盒模型 */
+  font-size: 16px; /* 字体大小 */
+  transition: border-color 0.3s; /* 边框颜色渐变效果 */
+}
+
+/* 输入框和文本区域获得焦点时的样式 */
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #007bff; /* 边框颜色 */
+  outline: none; /* 去除默认的轮廓线 */
+}
+
+/* 提交按钮样式 */
+.form-submit {
+  width: 100%; /* 宽度100% */
+  padding: 15px; /* 内边距 */
+  border: none; /* 无边框 */
+  border-radius: 4px; /* 边框圆角 */
+  background-color: #007bff; /* 背景颜色 */
+  color: white; /* 文本颜色 */
+  font-size: 18px; /* 字体大小 */
+  cursor: pointer; /* 鼠标手型 */
+  transition: background-color 0.3s; /* 背景颜色渐变效果 */
+}
+
+/* 提交按钮悬停效果 */
+.form-submit:hover {
+  background-color: #0056b3; /* 悬停时的背景颜色 */
+}
+
+/* 辅助类：用于错误消息或提示 */
+.error {
+  color: #dc3545; /* 错误文本颜色 */
+  font-size: 14px; /* 字体大小 */
+  margin-bottom: 20px; /* 下外边距 */
+}
+
+/* 辅助类：用于成功消息 */
+.success {
+  color: #28a745; /* 成功文本颜色 */
+  font-size: 14px; /* 字体大小 */
+  margin-bottom: 20px; /* 下外边距 */
+}

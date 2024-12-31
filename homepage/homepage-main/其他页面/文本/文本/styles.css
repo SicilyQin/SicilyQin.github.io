@@ -1,0 +1,51 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Rubik Mono One', sans-serif;
+  background: #22292C;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 0;
+}
+
+.input {
+  position: absolute;
+  z-index: 2;  /* 确保输入框显示在前面 */
+  bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: helvetica, sans-serif;
+  background: none;
+  border: 1px solid #ddd;
+  color: #eee;
+  padding: 10px;
+}
+
+.text, .offscreen-text {
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+  position: absolute;
+  margin: 0;
+  z-index: 2;  /* 确保文字显示在前面 */
+}
+
+.offscreen-text {
+  text-align: center;
+  top: -9999px;  /* 初始位置，动态更新 */
+}
+
+.text span {
+  position: absolute;
+  font-size: 50px;  /* 设置初始字体大小 */
+}
