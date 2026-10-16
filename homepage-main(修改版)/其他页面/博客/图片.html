@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>图片墙 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+<style>
+  /* 返回主页按钮 */
+  .back-home {
+    position: fixed; top: 16px; left: 16px; z-index: 99;
+    padding: 8px 16px; border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55); color: #fff; font-size: 14px;
+    font-family: 'Hepta Slab', 'Microsoft YaHei', sans-serif;
+    text-decoration: none; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: background 0.3s ease;
+  }
+  .back-home:hover { background: rgba(0, 0, 0, 0.8); }
+  .scroll-hint {
+    position: fixed; right: 16px; bottom: 14px; z-index: 99;
+    color: #55524e; font-size: 13px; font-family: 'Hepta Slab', 'Microsoft YaHei', sans-serif;
+    background: rgba(255, 255, 255, 0.72); padding: 6px 12px; border-radius: 999px;
+  }
+  .img-wrapper { cursor: zoom-in; }
+  .img-wrapper img { max-width: 52vh; max-height: 56vh; }
+  /* 灯箱 */
+  #lightbox {
+    position: fixed; inset: 0; z-index: 200; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(8, 8, 12, 0.9); padding: 4vh 4vw;
+  }
+  #lightbox.on { display: flex; }
+  #lightbox img {
+    max-width: 92vw; max-height: 82vh; width: auto; height: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    background: #fff; padding: 10px;
+  }
+  #lightbox .lb-bar {
+    position: absolute; bottom: 4vh; left: 50%; transform: translateX(-50%);
+    color: #f2f2f2; font-size: 14px; font-family: 'Hepta Slab', 'Microsoft YaHei', sans-serif;
+    background: rgba(0, 0, 0, 0.5); padding: 8px 16px; border-radius: 999px; white-space: nowrap;
+  }
+  #lightbox .lb-bar a { color: #8fd3ff; }
+</style>
+</head>
+<body>
+
+<a class="back-home" href="../../index.html">&larr; 返回主页</a>
+<span class="scroll-hint">滚轮 / 拖动滚动 &nbsp;·&nbsp; 点图放大</span>
+
+<div style="width:100%;">
+  <div class="external" style="width:100%">
+    <div class="horizontal-scroll-wrapper" id="strip"></div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-bar"><span id="lb-name"></span> · <span id="lb-size"></span> &nbsp;|&nbsp; <a href="#" id="lb-open" target="_blank" rel="noopener">在新标签打开原图</a></div>
+</div>
+
+<script>
+var ITEMS = [
+  {
+    "name": "photo-01.jpg",
+    "url": "../../static/img/gallery/photo-01.jpg",
+    "size": "2560×1440"
+  },
+  {
+    "name": "photo-02.jpg",
+    "url": "../../static/img/gallery/photo-02.jpg",
+    "size": "2560×1440"
+  },
+  {
+    "name": "photo-03.jpg",
+    "url": "../../static/img/gallery/photo-03.jpg",
+    "size": "1196×1920"
+  },
+  {
+    "name": "photo-04.jpg",
+    "url": "../../static/img/gallery/photo-04.jpg",
+    "size": "1920×1141"
+  },
+  {
+    "name": "photo-05.jpg",
+    "url": "../../static/img/gallery/photo-05.jpg",
+    "size": "1920×1080"
+  },
+  {
+    "name": "photo-06.jpg",
+    "url": "../../static/img/gallery/photo-06.jpg",
+    "size": "1080×1710"
+  },
+  {
+    "name": "photo-07.jpg",
+    "url": "../../static/img/gallery/photo-07.jpg",
+    "size": "1260×931"
+  },
+  {
+    "name": "photo-08.jpg",
+    "url": "../../static/img/gallery/photo-08.jpg",
+    "size": "1439×1017"
+  },
+  {
+    "name": "photo-09.jpg",
+    "url": "../../static/img/gallery/photo-09.jpg",
+    "size": "706×944"
+  },
+  {
+    "name": "photo-10.jpg",
+    "url": "../../static/img/gallery/photo-10.jpg",
+    "size": "1194×1920"
+  },
+  {
+    "name": "photo-11.jpg",
+    "url": "../../static/img/gallery/photo-11.jpg",
+    "size": "1439×1064"
+  }
+];
+
+(function () {
+  // 视差错位：和原来那 9 张手工排的节奏一样，图片多于 9 张就循环使用
+  var STAGGER = ['slower', 'faster', 'slower vertical', 'slower slower-down', '',
+                 'slower', 'faster1', 'slower slower2', '', 'faster', 'last'];
+
+  var strip = document.getElementById('strip');
+  strip.innerHTML = ITEMS.map(function (it, i) {
+    return '<div class="img-wrapper ' + STAGGER[i % STAGGER.length] + '" data-i="' + i + '">' +
+      '<a><img src="' + it.url + '" alt="' + it.name + '"></a></div>';
+  }).join('');
+
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lb-img');
+  var lbName = document.getElementById('lb-name');
+  var lbSize = document.getElementById('lb-size');
+
+  strip.addEventListener('click', function (e) {
+    var wrap = e.target.closest ? e.target.closest('.img-wrapper') : null;
+    if (!wrap) return;
+    e.preventDefault();
+    var it = ITEMS[Number(wrap.dataset.i)];
+    if (!it) return;
+    lbImg.src = it.url;
+    lbName.textContent = it.name;
+    lbSize.textContent = it.size;
+    document.getElementById('lb-open').href = it.url;
+    lb.classList.add('on');
+  });
+
+  lb.addEventListener('click', function (e) {
+    if (e.target === lbImg) return;   // 点图本身不关
+    lb.classList.remove('on');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') lb.classList.remove('on');
+  });
+})();
+</script>
+</body>
+</html>

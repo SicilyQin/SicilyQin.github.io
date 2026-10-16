@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>云盘页到底要不要“真”上传 · 博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="./blog.html">&larr; 返回列表</a>
+    <a class="back" href="../index.html">返回主页</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+  <div class="article">
+    <h1 class="title">云盘页到底要不要“真”上传</h1>
+    <p class="subtitle">2026-08-16 · <span class="tag">网站</span><span class="tag">计划</span></p>
+    <h2>现状</h2>
+<p>这个站是纯静态的 GitHub Pages，浏览器里<strong>不能</strong>直接往仓库写文件——那需要服务端凭证。所以现在的云盘页是一个“文件清单 + 搜索 + 收藏”，清单存在一个 JSON 里，改起来就是改文本。</p>
+<h2>想要真上传的话</h2>
+<ul><li>接一个第三方对象存储（图床 / S3 兼容），前端直传，清单记下外链。</li><li>或者干脆用 GitHub Releases 挂文件，页面里贴下载链接。</li><li>再或者把清单交给一个 Serverless 函数来管。</li></ul>
+<p>这三条哪条都行，看你更想省事还是更想自己掌控。</p>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

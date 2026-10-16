@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>留言板 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../index.html">&larr; 返回主页</a>
+    <a class="back" href="./blog.html">博客</a>
+    <a class="back" href="./drive.html">云盘</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+
+  <h1 class="title">留言板</h1>
+  <p class="subtitle">想说什么就写点什么 · 共 <span id="count">0</span> 条</p>
+
+  <div class="search-row">
+    <input id="nick" type="text" placeholder="你的名字（可留空）" maxlength="20" style="max-width:220px">
+  </div>
+  <textarea id="text" placeholder="写点什么…（比如：这个站挺好看的）" maxlength="500"></textarea>
+  <div class="search-row" style="margin-top:12px">
+    <button class="chip active" id="send" type="button">发布留言</button>
+    <button class="chip" id="clear" type="button">清空全部</button>
+    <span id="tip" style="color:var(--text-dim);font-size:13px;align-self:center"></span>
+  </div>
+
+  <div class="list" id="list" style="margin-top:22px"></div>
+  <div class="empty" id="empty">还没有留言，你可以第一个写</div>
+
+  <div class="storage-tip">
+    <strong>说明：</strong>这是纯静态站，没有后台，所以留言存在<strong>你自己浏览器的 localStorage</strong> 里（换设备或清缓存就没了）。
+    想让所有人都能看见，得挂一个后端或第三方评论服务（比如 Giscus / Waline），要接的话说一声。
+  </div>
+
+<script>
+(function () {
+  var KEY = 'sq-guestbook';
+  var listEl = document.getElementById('list');
+  var emptyEl = document.getElementById('empty');
+  var nickEl = document.getElementById('nick');
+  var textEl = document.getElementById('text');
+  var tipEl = document.getElementById('tip');
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; }
+  }
+  function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function fmt(ts) {
+    var d = new Date(ts);
+    function p(n) { return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  function render() {
+    var msgs = load();
+    document.getElementById('count').textContent = String(msgs.length);
+    emptyEl.style.display = msgs.length ? 'none' : 'block';
+    listEl.innerHTML = msgs.map(function (m) {
+      return '<div class="msg"><span class="who">' + esc(m.nick || '匿名') + '</span>' +
+        '<span class="when">' + fmt(m.ts) + '</span>' +
+        '<div class="what">' + esc(m.text) + '</div></div>';
+    }).join('');
+  }
+
+  document.getElementById('send').addEventListener('click', function () {
+    var t = textEl.value.trim();
+    if (!t) { tipEl.textContent = '先写点内容吧'; return; }
+    var msgs = load();
+    msgs.unshift({ nick: nickEl.value.trim() || '匿名', text: t, ts: Date.now() });
+    save(msgs);
+    textEl.value = '';
+    tipEl.textContent = '已保存（存在你这台设备上）';
+    render();
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    if (!load().length) return;
+    if (!confirm('清空这台设备上的全部留言？')) return;
+    save([]);
+    tipEl.textContent = '已清空';
+    render();
+  });
+
+  render();
+})();
+</script>
+
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>满屏漂浮爱心，用 canvas 重写了一遍 · 博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="./blog.html">&larr; 返回列表</a>
+    <a class="back" href="../index.html">返回主页</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+  <div class="article">
+    <h1 class="title">满屏漂浮爱心，用 canvas 重写了一遍</h1>
+    <p class="subtitle">2026-08-17 · <span class="tag">JavaScript</span><span class="tag">canvas</span></p>
+    <h2>思路</h2>
+<p>在一个离屏 canvas 上把文字画出来，逐像素采样出“有字”的坐标，这些坐标就是粒子要去的目标点；每帧让粒子带着阻尼靠向目标，再叠加一点随机横向摆动和上升位移，看起来就是飘起来的爱心。</p>
+<h2>几个细节</h2>
+<ul><li>按 devicePixelRatio 缩放，高分屏不糊。</li><li>粒子颜色从粉色渐变到紫色，透明度随机，做出景深。</li><li>文字太长会提示，避免采样点太多把帧率拖死。</li></ul>
+<p>页面在这里：<code>pages/hearts.html</code>，输入框里换文字试试。</p>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

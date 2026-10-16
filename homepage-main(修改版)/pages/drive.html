@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>云盘 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../index.html">&larr; 返回主页</a>
+    <a class="back" href="./blog.html">博客</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+
+  <h1 class="title">云盘</h1>
+  <p class="subtitle">存储收集文件 · <span id="count">0</span> 项 · 收藏只存在你自己的浏览器里</p>
+
+  <div class="search-row">
+    <input id="q" type="search" placeholder="搜索文件名、标签…">
+  </div>
+  <div class="search-row" id="kindRow"></div>
+
+  <div class="list" id="list"></div>
+  <div class="empty" id="empty" style="display:none">没有匹配的文件</div>
+
+  <div class="storage-tip">
+    <strong>怎么加文件：</strong>打开 <code>pages/drive.html</code>，最下面的 <code>FILES</code> 数组里照着已有的一条复制、改 <code>name</code> / <code>url</code> / <code>size</code> 就行。
+    线上的图片和文件放在仓库里，用相对路径引用即可。<br>
+    <strong>关于真上传：</strong>纯静态站没法直接写入文件，要真上传得挂一个对象存储（图床 / S3 兼容）或 GitHub Releases，页面里放外链。要接哪种说一声。
+  </div>
+</div>
+
+<script>
+var FILES = [
+  {
+    "name": "photo-01.jpg",
+    "url": "../static/img/gallery/photo-01.jpg",
+    "size": "2560×1440",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-02.jpg",
+    "url": "../static/img/gallery/photo-02.jpg",
+    "size": "2560×1440",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-03.jpg",
+    "url": "../static/img/gallery/photo-03.jpg",
+    "size": "1196×1920",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-04.jpg",
+    "url": "../static/img/gallery/photo-04.jpg",
+    "size": "1920×1141",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-05.jpg",
+    "url": "../static/img/gallery/photo-05.jpg",
+    "size": "1920×1080",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-06.jpg",
+    "url": "../static/img/gallery/photo-06.jpg",
+    "size": "1080×1710",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-07.jpg",
+    "url": "../static/img/gallery/photo-07.jpg",
+    "size": "1260×931",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-08.jpg",
+    "url": "../static/img/gallery/photo-08.jpg",
+    "size": "1439×1017",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-09.jpg",
+    "url": "../static/img/gallery/photo-09.jpg",
+    "size": "706×944",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-10.jpg",
+    "url": "../static/img/gallery/photo-10.jpg",
+    "size": "1194×1920",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "photo-11.jpg",
+    "url": "../static/img/gallery/photo-11.jpg",
+    "size": "1439×1064",
+    "date": "2026-10-16",
+    "kind": "图片",
+    "tag": "我的照片"
+  },
+  {
+    "name": "图片墙.html",
+    "url": "../其他页面/博客/图片.html",
+    "size": "网页",
+    "date": "2026-08-18",
+    "kind": "网页",
+    "tag": "横向视差图集"
+  },
+  {
+    "name": "Font effect.html",
+    "url": "../其他页面/文本/文本/Font effect.html",
+    "size": "网页",
+    "date": "2026-01-05",
+    "kind": "网页",
+    "tag": "字体特效"
+  },
+  {
+    "name": "满屏漂浮爱心.html",
+    "url": "./hearts.html",
+    "size": "网页",
+    "date": "2026-08-19",
+    "kind": "网页",
+    "tag": "canvas 特效"
+  },
+  {
+    "name": "头像.jpg",
+    "url": "../头像.jpg",
+    "size": "948×948",
+    "date": "2026-01-05",
+    "kind": "图片",
+    "tag": "站内素材"
+  },
+  {
+    "name": "paycode.png",
+    "url": "../paycode.png",
+    "size": "142 KB",
+    "date": "2026-01-05",
+    "kind": "图片",
+    "tag": "站内素材"
+  },
+  {
+    "name": "qq.png",
+    "url": "../qq.png",
+    "size": "256 KB",
+    "date": "2026-01-05",
+    "kind": "图片",
+    "tag": "站内素材"
+  }
+];
+
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+
+  var STAR_KEY = 'sq-drive-stars';
+  var stars = [];
+  try { stars = JSON.parse(localStorage.getItem(STAR_KEY) || '[]'); } catch (e) { stars = []; }
+  function saveStars() { try { localStorage.setItem(STAR_KEY, JSON.stringify(stars)); } catch (e) {} }
+
+  var listEl = document.getElementById('list');
+  var emptyEl = document.getElementById('empty');
+  var qEl = document.getElementById('q');
+  var kindRow = document.getElementById('kindRow');
+  var activeKind = '';
+
+  var kinds = [];
+  FILES.forEach(function (f) { if (kinds.indexOf(f.kind) < 0) kinds.push(f.kind); });
+
+  var allBtn = document.createElement('button');
+  allBtn.className = 'chip active';
+  allBtn.type = 'button';
+  allBtn.textContent = '全部';
+  allBtn.addEventListener('click', function () { activeKind = ''; syncChips(); render(); });
+  kindRow.appendChild(allBtn);
+
+  kinds.forEach(function (k) {
+    var b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.textContent = k;
+    b.dataset.kind = k;
+    b.addEventListener('click', function () { activeKind = (activeKind === k ? '' : k); syncChips(); render(); });
+    kindRow.appendChild(b);
+  });
+
+  function syncChips() {
+    [].forEach.call(kindRow.querySelectorAll('.chip'), function (c) {
+      c.classList.toggle('active', (c.dataset.kind || '') === activeKind);
+    });
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function iconOf(f) {
+    if (f.kind === '图片') return '\uD83D\uDDBC\uFE0F';
+    if (f.kind === '网页') return '\uD83C\uDF10';
+    return '\uD83D\uDCC4';
+  }
+
+  function render() {
+    var q = qEl.value.trim().toLowerCase();
+    var shown = FILES.filter(function (f) {
+      if (activeKind && f.kind !== activeKind) return false;
+      if (!q) return true;
+      return (f.name + ' ' + f.tag + ' ' + f.kind).toLowerCase().indexOf(q) >= 0;
+    });
+
+    listEl.innerHTML = shown.map(function (f, i) {
+      var starOn = stars.indexOf(f.name) >= 0 ? ' on' : '';
+      return '<div class="file-row" style="animation:rise .4s ease both;animation-delay:' + (i * 30) + 'ms">' +
+        '<span class="file-icon">' + iconOf(f) + '</span>' +
+        '<span class="file-main">' +
+          '<a class="file-name" href="' + esc(f.url) + '" target="_blank" rel="noopener">' + esc(f.name) + '</a>' +
+          '<span class="file-sub">' + esc(f.kind) + ' · ' + esc(f.tag) + ' · ' + esc(f.date) + '</span>' +
+        '</span>' +
+        '<span class="file-size">' + esc(f.size) + '</span>' +
+        '<button class="star' + starOn + '" type="button" title="收藏" data-name="' + esc(f.name) + '">\u2605</button>' +
+      '</div>';
+    }).join('');
+
+    document.getElementById('count').textContent = String(shown.length);
+    emptyEl.style.display = shown.length ? 'none' : 'block';
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.star') : null;
+    if (!btn) return;
+    e.preventDefault();
+    var name = btn.getAttribute('data-name');
+    var idx = stars.indexOf(name);
+    if (idx >= 0) { stars.splice(idx, 1); btn.classList.remove('on'); }
+    else { stars.push(name); btn.classList.add('on'); }
+    saveStars();
+  });
+
+  qEl.addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>满屏漂浮爱心</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #07060f; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  .ui {
+    position: fixed; left: 0; right: 0; bottom: 26px;
+    display: flex; gap: 10px; justify-content: center; align-items: center;
+    flex-wrap: wrap; padding: 0 16px;
+    font-family: "Microsoft YaHei", system-ui, sans-serif;
+    z-index: 10;
+  }
+  .ui input {
+    width: min(360px, 60vw);
+    padding: 11px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffe9f2;
+    font-size: 15px;
+    outline: none;
+    backdrop-filter: blur(6px);
+  }
+  .ui input::placeholder { color: rgba(255, 255, 255, 0.45); }
+  .ui button, .ui a {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffe9f2;
+    border-radius: 999px;
+    padding: 11px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    backdrop-filter: blur(6px);
+  }
+  .ui button:hover, .ui a:hover { background: rgba(255, 255, 255, 0.18); }
+  .hint {
+    position: fixed; top: 18px; left: 0; right: 0; text-align: center;
+    color: rgba(255, 255, 255, 0.4); font-size: 13px;
+    font-family: "Microsoft YaHei", system-ui, sans-serif;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="hint">输入文字回车，粒子会重新拼成它；点画面也会落一撮心</div>
+<div class="ui">
+  <input id="txt" type="text" value="SicilyQin" maxlength="12" placeholder="输入 1-12 个字">
+  <button id="go" type="button">飘起来</button>
+  <a href="../index.html">返回主页</a>
+</div>
+
+<script>
+(function () {
+  var cv = document.getElementById('cv');
+  var ctx = cv.getContext('2d');
+  var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var particles = [];
+  var hueBase = 330;
+  var mouse = { x: -9999, y: -9999 };
+  var time = 0;
+  var lastFrame = 0;
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cv.width = Math.floor(W * DPR);
+    cv.height = Math.floor(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    build();
+  }
+
+  // 在离屏画布上画文字，逐像素采样出目标点
+  function sampleText(text) {
+    var off = document.createElement('canvas');
+    off.width = W;
+    off.height = H;
+    var octx = off.getContext('2d');
+    var size = Math.min(W / (text.length * 0.72 + 1.2), H * 0.32);
+    size = Math.max(48, Math.min(size, 220));
+    octx.fillStyle = '#fff';
+    octx.textAlign = 'center';
+    octx.textBaseline = 'middle';
+    octx.font = '700 ' + size + 'px "Microsoft YaHei", "PingFang SC", system-ui, sans-serif';
+    octx.fillText(text, W / 2, H / 2 - 20);
+
+    var data = octx.getImageData(0, 0, off.width, off.height).data;
+    // 采样间距按文字面积自适应：字数多就把间距放大，粒子总量稳定在 2500 左右
+    var area = Math.max(W, H) * size * 1.6;
+    var gap = Math.max(4, Math.round(Math.sqrt(area / 1400) * 0.5));
+    var pts = [];
+    for (var y = 0; y < off.height; y += gap) {
+      for (var x = 0; x < off.width; x += gap) {
+        if (data[(y * off.width + x) * 4 + 3] > 128) pts.push({ x: x, y: y });
+      }
+    }
+    return pts;
+  }
+
+  function build() {
+    var text = (document.getElementById('txt').value || 'SicilyQin').trim().slice(0, 12) || '爱心';
+    var pts = sampleText(text);
+    var next = [];
+
+    for (var i = 0; i < pts.length; i++) {
+      var target = pts[i];
+      var old = particles[i];
+      next.push({
+        x: old ? old.x : Math.random() * W,
+        y: old ? old.y : H + Math.random() * 200,
+        tx: target.x,
+        ty: target.y,
+        baseY: target.y,
+        vx: 0,
+        vy: 0,
+        r: 0.9 + Math.random() * 1.6,
+        hue: hueBase + (target.x / W) * 70 - 35,
+        alpha: 0.5 + Math.random() * 0.5,
+        wob: Math.random() * Math.PI * 2,
+        wobSpeed: 0.01 + Math.random() * 0.02
+      });
+    }
+    particles = next;
+  }
+
+  function step() {
+    lastFrame = Date.now();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(7, 6, 15, 0.38)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    time += 1;
+    var span = H + 160;
+    var drift = time * 0.55;
+    var offset = drift % span;
+
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.wob += p.wobSpeed;
+
+      // 目标点：整段文字作为整体慢慢上浮，飘出画面就从底部重新进入
+      var ty = p.baseY - offset;
+      while (ty < -140) ty += span;
+
+      var dx = p.tx - p.x;
+      var dy = ty - p.y;
+      p.vx = (p.vx + dx * 0.07) * 0.82;
+      p.vy = (p.vy + dy * 0.07) * 0.82;
+
+      // 鼠标轻推
+      var mx = p.x - mouse.x, my = p.y - mouse.y;
+      var d2 = mx * mx + my * my;
+      if (d2 < 10000 && d2 > 0.01) {
+        var f = (1 - Math.sqrt(d2) / 100) * 2.2;
+        p.vx += (mx / Math.sqrt(d2)) * f;
+        p.vy += (my / Math.sqrt(d2)) * f;
+      }
+
+      p.x += p.vx + Math.sin(p.wob) * 0.4;
+      p.y += p.vy;
+
+      var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+      grad.addColorStop(0, 'hsla(' + p.hue + ', 100%, 72%, ' + p.alpha + ')');
+      grad.addColorStop(1, 'hsla(' + (p.hue + 18) + ', 100%, 60%, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    requestAnimationFrame(step);
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener('mouseout', function () { mouse.x = mouse.y = -9999; });
+
+  document.getElementById('go').addEventListener('click', build);
+  document.getElementById('txt').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') build();
+  });
+
+  function tick() {
+    if (Date.now() - lastFrame > 40) step();
+  }
+
+  resize();
+  step();
+  // requestAnimationFrame 在标签页不处于前台时几乎不跑，用一个定时器兜底，保证动画始终在推进
+  if (window.requestAnimationFrame) requestAnimationFrame(tick);
+  setInterval(tick, 33);
+})();
+</script>
+</body>
+</html>

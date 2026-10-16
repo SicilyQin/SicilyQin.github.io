@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>关于我 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../index.html">&larr; 返回主页</a>
+    <a class="back" href="./blog.html">博客</a>
+    <a class="back" href="./drive.html">云盘</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+
+  <h1 class="title">关于我</h1>
+  <p class="subtitle">一个把课余时间都花在网页上的高三学生</p>
+
+  <div class="article">
+    <div class="about-head">
+      <img class="about-avatar" src="../头像.jpg" alt="头像">
+      <div>
+        <div style="font-size:22px;font-weight:700;">SicilyQin</div>
+        <div style="color:var(--text-dim);font-size:14px;margin-top:6px;">China-Henan · Sias · 出生 2007.3</div>
+      </div>
+    </div>
+
+    <p>整天半吊子和不学无术的坏孩子，梦想成为庄稼地里的读书人。喜欢折腾网页，写点小东西放在<a href="./drive.html">云盘</a>和实验室里。</p>
+
+    <h2>联系方式</h2>
+    <div class="kv">
+      <div><b>邮箱</b><a href="mailto:1451462630@qq.com">1451462630@qq.com</a></div>
+      <div><b>GitHub</b><a href="https://github.com/SicilyQin/SicilyQin.github.io" target="_blank" rel="noopener">SicilyQin/SicilyQin.github.io</a></div>
+    </div>
+
+    <h2>在折腾什么</h2>
+    <div class="chip-row">
+      <span class="chip">网页</span><span class="chip">C</span><span class="chip">JavaScript</span>
+      <span class="chip">Linux</span><span class="chip">音乐</span><span class="chip">琴</span>
+    </div>
+
+    <h2>时间线</h2>
+    <div class="kv">
+      <div><b>2024.1</b>正如彼梦会醒来一般，此梦也终有梦醒之时</div>
+      <div><b>2007.3</b>出生</div>
+    </div>
+
+    <div class="storage-tip">这一页的内容都写在 <code>pages/about.html</code> 里，想改直接改文字。</div>
+  </div>
+
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+
+</body>
+</html>

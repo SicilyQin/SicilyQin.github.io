@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>把首页那堆坏链修完了 · 博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="./blog.html">&larr; 返回列表</a>
+    <a class="back" href="../index.html">返回主页</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+  <div class="article">
+    <h1 class="title">把首页那堆坏链修完了</h1>
+    <p class="subtitle">2026-08-19 · <span class="tag">网站</span><span class="tag">折腾</span></p>
+    <h2>坏在哪</h2>
+<p>原来的首页上，四个卡片有三个是坏的：实验室那张写的是本机绝对路径 <code>D:\cyy\code\html\...</code>，另一张只写了裸域名 <code>SicilyQin.github.io</code>（浏览器会当成相对路径），博客和云盘则指向原模板作者 zyyo 的域名。</p>
+<h2>怎么修的</h2>
+<ul><li>实验室 → 站内 <code>其他页面/文本/文本/Font effect.html</code>，并且把原来跳 <code>D:/cyy/...</code> 的返回逻辑改成跳首页。</li><li>图片墙 → 站内图片页，9 张图原来全是 <code>D:\素材\图片\...</code>，现在换成本地生成的渐变壁纸。</li><li>博客 / 云盘 → 不再指向别人的站，换成自己写的两个落地页。</li></ul>
+<h2>顺手做的事</h2>
+<p>LOGO 背景、手机端二维码这类写死的 <code>/homepage/homepage-main/xxx</code> 路径全改成了相对路径；不存在的 <code>index.scss</code> 引用删了；GitHub 图标原来指向一个 404 的账号地址，也改对了。</p>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

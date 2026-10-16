@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>画板 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../index.html">&larr; 返回主页</a>
+    <a class="back" href="./blog.html">博客</a>
+    <a class="back" href="./drive.html">云盘</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+
+  <h1 class="title">画板</h1>
+  <p class="subtitle">随手涂两笔 · 支持撤销、清空、存成图片</p>
+
+  <div class="search-row" id="colors" style="align-items:center">
+    <span style="color:var(--text-dim);align-self:center">颜色</span>
+    <input id="picker" type="color" value="#1b2440" style="width:44px;height:34px;border:1px solid var(--line);border-radius:8px;background:none">
+    <span style="color:var(--text-dim);align-self:center;margin-left:10px">粗细</span>
+    <input id="size" type="range" min="1" max="40" value="6">
+    <span id="sizeVal" style="color:var(--text-dim);align-self:center">6</span>
+    <button class="chip" id="eraser" type="button">橡皮</button>
+    <button class="chip" id="undo" type="button">撤销</button>
+    <button class="chip" id="clear" type="button">清空</button>
+    <button class="chip active" id="save" type="button">保存图片</button>
+  </div>
+
+  <canvas class="board" id="board" width="1000" height="620"></canvas>
+
+  <div class="storage-tip">画完点「保存图片」会下载一张 PNG；canvas 尺寸固定 1000×620，手机上也能用手指画。</div>
+
+<script>
+(function () {
+  var cv = document.getElementById('board');
+  var ctx = cv.getContext('2d');
+  var picker = document.getElementById('picker');
+  var sizeEl = document.getElementById('size');
+  var sizeVal = document.getElementById('sizeVal');
+  var eraser = false;
+  var snapshot = null;
+  var drawing = false;
+  var last = null;
+
+  function clearAll() {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, cv.width, cv.height);
+  }
+  function pushUndo() {
+    try { snapshot = ctx.getImageData(0, 0, cv.width, cv.height); } catch (e) {}
+  }
+  function stamp(x, y) {
+    ctx.fillStyle = eraser ? '#ffffff' : picker.value;
+    ctx.beginPath();
+    ctx.arc(x, y, Number(sizeEl.value) / 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  function pos(e) {
+    var r = cv.getBoundingClientRect();
+    return {
+      x: (e.clientX - r.left) * (cv.width / r.width),
+      y: (e.clientY - r.top) * (cv.height / r.height)
+    };
+  }
+
+  cv.addEventListener('pointerdown', function (e) {
+    pushUndo();
+    drawing = true;
+    last = pos(e);
+    stamp(last.x, last.y);
+    cv.setPointerCapture && cv.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  cv.addEventListener('pointermove', function (e) {
+    if (!drawing) return;
+    var p = pos(e);
+    ctx.strokeStyle = eraser ? '#ffffff' : picker.value;
+    ctx.lineWidth = Number(sizeEl.value);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+    e.preventDefault();
+  });
+  window.addEventListener('pointerup', function () { drawing = false; });
+  cv.addEventListener('pointerleave', function () { drawing = false; });
+
+  sizeEl.addEventListener('input', function () { sizeVal.textContent = sizeEl.value; });
+  eraser.addEventListener('click', function () {
+    eraser = !eraser;
+    eraser.classList.toggle('active', eraser);
+    eraser.textContent = eraser ? '橡皮：开' : '橡皮';
+  });
+  document.getElementById('undo').addEventListener('click', function () {
+    if (snapshot) ctx.putImageData(snapshot, 0, 0);
+  });
+  document.getElementById('clear').addEventListener('click', function () {
+    pushUndo();
+    clearAll();
+  });
+  document.getElementById('save').addEventListener('click', function () {
+    var a = document.createElement('a');
+    a.download = 'drawing.png';
+    a.href = cv.toDataURL('image/png');
+    a.click();
+  });
+
+  clearAll();
+})();
+</script>
+
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+
+</body>
+</html>

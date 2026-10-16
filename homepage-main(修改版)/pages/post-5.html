@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>关于这个站的一点记录 · 博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="./blog.html">&larr; 返回列表</a>
+    <a class="back" href="../index.html">返回主页</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+  <div class="article">
+    <h1 class="title">关于这个站的一点记录</h1>
+    <p class="subtitle">2026-01-05 · <span class="tag">随笔</span></p>
+    <h2>它从哪来</h2>
+<p>这个页面是照着网上的一个个人主页模板改的，左侧信息卡 + 中间卡片区，配色和动效都挺舒服。模板自带了一些指向作者自己站点的链接，一开始没在意，后来发现那些域名有的已经打不开了。</p>
+<h2>打算怎么弄</h2>
+<ul><li>所有点得动的卡片，要么指向本站的真实页面，要么干脆不跳转，不放死链。</li><li>别人的资源（CDN、统计脚本、歌单）能用就留着，用不了就换成本地的。</li><li>内容自己写，写不动就少写点，反正这站主要是给自己看的。</li></ul>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

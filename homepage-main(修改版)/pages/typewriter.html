@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>打字机效果 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../index.html">&larr; 返回主页</a>
+    <a class="back" href="./blog.html">博客</a>
+    <a class="back" href="./drive.html">云盘</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+
+  <h1 class="title">打字机效果</h1>
+  <p class="subtitle">一个字一个字敲出来，带光标闪烁和可选音效</p>
+
+  <div class="tw-stage"><span><span id="out"></span><span class="tw-caret">&nbsp;</span></span></div>
+
+  <div class="search-row">
+    <input id="txt" type="text" value="愿许秋风知我意，事事如意上心头" maxlength="60" style="flex:1">
+  </div>
+  <div class="search-row">
+    <span style="color:var(--text-dim);align-self:center">速度</span>
+    <input id="speed" type="range" min="30" max="400" value="140" step="10">
+    <button class="chip active" id="go" type="button">开始打字</button>
+    <button class="chip" id="sound" type="button">音效：关</button>
+  </div>
+
+  <div class="storage-tip">输入任意文字，点「开始打字」重来一遍；音效用 WebAudio 现场合成，不加载任何外部文件。</div>
+
+<script>
+(function () {
+  var out = document.getElementById('out');
+  var txt = document.getElementById('txt');
+  var speed = document.getElementById('speed');
+  var soundBtn = document.getElementById('sound');
+  var timer = null;
+  var soundOn = false;
+  var audioCtx = null;
+
+  function beep() {
+    if (!soundOn) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'square';
+      o.frequency.value = 1500 + Math.random() * 700;
+      g.gain.value = 0.035;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+      o.stop(audioCtx.currentTime + 0.04);
+    } catch (e) {}
+  }
+
+  soundBtn.addEventListener('click', function () {
+    soundOn = !soundOn;
+    soundBtn.textContent = '音效：' + (soundOn ? '开' : '关');
+    soundBtn.classList.toggle('active', soundOn);
+  });
+
+  function run() {
+    if (timer) { clearInterval(timer); timer = null; }
+    var s = txt.value || '你好';
+    var i = 0;
+    out.textContent = '';
+    timer = setInterval(function () {
+      out.textContent += s.charAt(i++);
+      beep();
+      if (i >= s.length) { clearInterval(timer); timer = null; }
+    }, Number(speed.value));
+  }
+
+  document.getElementById('go').addEventListener('click', run);
+  txt.addEventListener('keydown', function (e) { if (e.key === 'Enter') run(); });
+  speed.addEventListener('input', function () { if (timer) run(); });
+  run();
+})();
+</script>
+
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>博客 · SicilyQin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../index.html">&larr; 返回主页</a>
+    <a class="back" href="./drive.html">云盘</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+
+  <h1 class="title">博客</h1>
+  <p class="subtitle">记录摆烂日常 · 共 <span id="count">0</span> 篇</p>
+
+  <div class="search-row">
+    <input id="q" type="search" placeholder="搜索标题、摘要、标签…">
+  </div>
+  <div class="search-row" id="tagRow"></div>
+
+  <div class="grid" id="list"></div>
+  <div class="empty" id="empty" style="display:none">没有匹配的文章</div>
+
+  <div class="storage-tip">
+    这些文章都是页面自带的静态数据（<code>pages/blog.html</code> 里那段 <code>POSTS</code>），想加文章就复制一条改字段，不用任何后端。详情页放在 <code>pages/post-N.html</code>。
+  </div>
+</div>
+
+<script>
+var POSTS = [
+  {
+    "slug": "post-1",
+    "title": "把首页那堆坏链修完了",
+    "date": "2026-08-19",
+    "tags": [
+      "网站",
+      "折腾"
+    ],
+    "excerpt": "四个卡片终于全都点得动：实验室和图片墙换成站内页面，博客和云盘这两个原本指着别人域名的卡，现在有了自己的落地页。"
+  },
+  {
+    "slug": "post-2",
+    "title": "给图片墙配了 9 张占位壁纸",
+    "date": "2026-08-18",
+    "tags": [
+      "CSS",
+      "图片"
+    ],
+    "excerpt": "真图还在 D 盘那个读不到的文件夹里，先用脚本生成的渐变壁纸把版面撑起来，现在照片墙已经支持直接塞自己的照片了。"
+  },
+  {
+    "slug": "post-3",
+    "title": "满屏漂浮爱心，用 canvas 重写了一遍",
+    "date": "2026-08-17",
+    "tags": [
+      "JavaScript",
+      "canvas"
+    ],
+    "excerpt": "原来看的那个爱心页打不开了，于是自己写了一个：文字采样成粒子、往上升、带光晕和拖尾，输入什么字就飘什么字。"
+  },
+  {
+    "slug": "post-4",
+    "title": "云盘页到底要不要“真”上传",
+    "date": "2026-08-16",
+    "tags": [
+      "网站",
+      "计划"
+    ],
+    "excerpt": "静态站没有后端，上传是没法凭空变出来的。先把清单和检索做扎实，真要传文件再挂后端。"
+  },
+  {
+    "slug": "post-5",
+    "title": "关于这个站的一点记录",
+    "date": "2026-01-05",
+    "tags": [
+      "随笔"
+    ],
+    "excerpt": "模板是别人的，内容得是自己的。慢慢把边上那些不属于本站的东西摘干净。"
+  }
+];
+
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+
+  var listEl = document.getElementById('list');
+  var emptyEl = document.getElementById('empty');
+  var qEl = document.getElementById('q');
+  var tagRow = document.getElementById('tagRow');
+  var activeTag = '';
+
+  var tags = [];
+  POSTS.forEach(function (p) {
+    p.tags.forEach(function (t) { if (tags.indexOf(t) < 0) tags.push(t); });
+  });
+
+  var allBtn = document.createElement('button');
+  allBtn.className = 'chip active';
+  allBtn.type = 'button';
+  allBtn.textContent = '全部';
+  allBtn.addEventListener('click', function () { activeTag = ''; syncChips(); render(); });
+  tagRow.appendChild(allBtn);
+
+  tags.forEach(function (t) {
+    var b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.textContent = t;
+    b.dataset.tag = t;
+    b.addEventListener('click', function () { activeTag = (activeTag === t ? '' : t); syncChips(); render(); });
+    tagRow.appendChild(b);
+  });
+
+  function syncChips() {
+    [].forEach.call(tagRow.querySelectorAll('.chip'), function (c) {
+      var t = c.dataset.tag || '';
+      c.classList.toggle('active', t === activeTag);
+    });
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function render() {
+    var q = qEl.value.trim().toLowerCase();
+    var shown = POSTS.filter(function (p) {
+      if (activeTag && p.tags.indexOf(activeTag) < 0) return false;
+      if (!q) return true;
+      var hay = (p.title + ' ' + p.excerpt + ' ' + p.tags.join(' ')).toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+
+    listEl.innerHTML = shown.map(function (p, i) {
+      return '<a class="card" href="./' + p.slug + '.html" style="animation-delay:' + (i * 40) + 'ms">' +
+        '<h2>' + esc(p.title) + '</h2>' +
+        '<p>' + esc(p.excerpt) + '</p>' +
+        '<div class="meta"><span>' + esc(p.date) + '</span>' +
+        p.tags.map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') +
+        '</div></a>';
+    }).join('');
+
+    document.getElementById('count').textContent = String(shown.length);
+    emptyEl.style.display = shown.length ? 'none' : 'block';
+  }
+
+  qEl.addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>

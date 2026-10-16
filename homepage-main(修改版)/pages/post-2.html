@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="Dark">
+<head>
+<meta charset="UTF-8">
+<title>给图片墙配了 9 张占位壁纸 · 博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="./blog.html">&larr; 返回列表</a>
+    <a class="back" href="../index.html">返回主页</a>
+    <div class="spacer"></div>
+    <button class="theme-btn" id="themeBtn" type="button">切换主题</button>
+  </div>
+  <div class="article">
+    <h1 class="title">给图片墙配了 9 张占位壁纸</h1>
+    <p class="subtitle">2026-08-18 · <span class="tag">CSS</span><span class="tag">图片</span></p>
+    <h2>为什么不用别人现成的图</h2>
+<p>图片墙是个横向视差滚动，9 个格子空一格就很明显，所以先让它有东西可看。占位图用脚本生成成 1600×1000 的 SVG，每张配色不同，风格统一。</p>
+<h2>加自己的照片</h2>
+<p>把照片放进一个文件夹，然后：</p>
+<pre><code>python _tools/use_my_wallpapers.py "D:\素材\图片"</code></pre>
+<p>脚本会把图按文件名排序复制成 <code>static/img/gallery/photo-01.jpg</code>、<code>photo-02.jpg</code>…（接着已有编号往后排，不会覆盖），然后自动重跑生成器，让「图片墙」和「云盘」清单一起更新。</p>
+<p>想清空重来就 <code>python _tools/use_my_wallpapers.py --reset</code>，只剩占位壁纸。</p>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'sq-theme';
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { root.dataset.theme = saved; }
+  var btn = document.getElementById('themeBtn');
+  btn.addEventListener('click', function () {
+    var next = root.dataset.theme === 'Light' ? 'Dark' : 'Light';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
